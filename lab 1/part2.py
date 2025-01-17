@@ -1,7 +1,7 @@
 # student name: Bryan Zhang
 # student number: 69238335
 
-# A command-line 2048 game test
+# A command-line 2048 game
 
 """
 Additional functionality: 
