@@ -20,23 +20,33 @@ class Rational:
     """
     def __init__(self, numerator: int, denominator: int) -> None:
         """ initializer stores the rational number in the lowest form """ 
-        def greatestCommonDivisor(n: int, d: int):
-            """ local method for the greatest common divisor calculation """
-            n1 = abs(n)
-            d1 = abs(d)
-            result = 1
-            k=1
-            while k <= n1 and k <= d1:
-                if n1 % k == 0 and d1 % k == 0:
-                    result = k
-                k += 1
-            return result
-        #rational number must be in the lowest form (numerator and denominator have no other common factor other than 1)
-        gcd: int = greatestCommonDivisor(numerator, denominator)
-        #numerator stores the sign of the rational
-        signFactor: int = 1 if denominator > 0 else -1
-        self.numerator = signFactor * numerator // gcd
-        self.denominator = abs(denominator) // gcd
+        try:
+            if denominator == 0:   
+                raise ZeroDivisionError()
+            def greatestCommonDivisor(n: int, d: int):
+                """ local method for the greatest common divisor calculation """
+                n1 = abs(n)
+                d1 = abs(d)
+                result = 1
+                k=1
+                while k <= n1 and k <= d1:
+                    if n1 % k == 0 and d1 % k == 0:
+                        result = k
+                    k += 1
+                return result
+            #rational number must be in the lowest form (numerator and denominator have no other common factor other than 1)
+            gcd: int = greatestCommonDivisor(numerator, denominator)
+            #numerator stores the sign of the rational
+            signFactor: int = 1 if denominator > 0 else -1
+            self.numerator = signFactor * numerator // gcd
+            self.denominator = abs(denominator) // gcd
+
+            if self.numerator == 0: # this handles values such as 0/4 and converts it into 0/1
+                self.denominator = 1
+
+        except(TypeError, ZeroDivisionError):  # this except handles cases where a field is left empty or invalid entry
+            self.numerator = 0
+            self.denominator = 0
     
     def add(self, secondRational: Rational) -> Rational:
         """
@@ -82,17 +92,15 @@ class Rational:
                 if 'this' rational is an integer, it must not show any denominator 
                 if denominator is 0, it returns "NaN" (not a number)
                 if numerator or the denominator is not an integer, it returns "NaN"
-        """ 
+        """    
         if self.denominator == 1:
             return str(self.numerator)
         if self.denominator == 0:
             return "NaN"
-        if type(self.numerator) != int or type(self.denominator) != int:
+        if type(self.numerator) != int or type(self.denominator) != int or self.numerator == None or self.denominator == None:
             return "NaN"
-        
-        return str(f"{self.numerator}/{self.denominator}")
+        return f"{self.numerator}/{self.denominator}"
     
-
 class GUI:
     """ 
         this class implements the GUI for our program
