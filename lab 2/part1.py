@@ -10,7 +10,7 @@ from tkinter import *
 class Rational:
     """ 
         this class implements the rational number type 
-        it stores the rational number in its lowest from
+        it stores the rational number in its lowest form
         two data fields: 
             numerator and denominator
             (numerator stores the sign of the rational)

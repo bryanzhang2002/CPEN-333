@@ -86,6 +86,7 @@ class Complex:
             else:
                 return f"{self.imaginary}i"
         
+        # the entry is a complex number
         result: str = str(self.real)
         if self.imaginary > 0:
             result += "+"
