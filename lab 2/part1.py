@@ -34,6 +34,7 @@ class Rational:
                         result = k
                     k += 1
                 return result
+            
             #rational number must be in the lowest form (numerator and denominator have no other common factor other than 1)
             gcd: int = greatestCommonDivisor(numerator, denominator)
             #numerator stores the sign of the rational

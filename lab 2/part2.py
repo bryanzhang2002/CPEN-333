@@ -56,7 +56,7 @@ class Complex:
            divides 'this' Complex by secondComplex
            returns the result as a Complex number (type Complex)
         """ 
-        if secondComplex.real == 0 and secondComplex.imaginary == 0:
+        if secondComplex.real == 0 and secondComplex.imaginary == 0:    # division by zero returns NaN
             return Complex(float('nan'), float('nan'))
         real = (self.real * secondComplex.real + self.imaginary * secondComplex.imaginary)/(secondComplex.real**2 + secondComplex.imaginary**2)
         imaginary = (self.imaginary * secondComplex.real - self.real * secondComplex.imaginary)/(secondComplex.real**2 + secondComplex.imaginary**2)
