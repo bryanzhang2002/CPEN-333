@@ -1,6 +1,8 @@
 #student name: Bryan Zhang
 #student number: 69238335
 
+import multiprocessing
+
 def checkColumn(puzzle: list, column: int):
     """ 
         param puzzle: a list of lists containing the puzzle 
@@ -110,12 +112,30 @@ if __name__ == "__main__":
               [8, 3, 7, 6, 1, 4, 2, 9, 5 ]
             ]
     
-    testcase = test2   #modify here for other testcases
+    testcase = test1   #modify here for other testcases
     SIZE = 9
 
-    for col in range(SIZE):  #checking all columns
-        checkColumn(testcase, col)
-    for row in range(SIZE):  #checking all rows
-        checkRow(testcase, row)
-    for subgrid in range(SIZE):   #checking all subgrids
-        checkSubgrid(testcase, subgrid)
+    # Create and start the checkRow processes
+    checkColumn_processes: list = []
+    for i in range(SIZE):
+        p = multiprocessing.Process(target=checkColumn, args=(testcase, i))
+        checkColumn_processes.append(p)
+        p.start()
+
+    # Create and start the checkRow processes
+    checkRow_processes: list = []
+    for i in range(SIZE):
+        p = multiprocessing.Process(target=checkRow, args=(testcase, i))
+        checkRow_processes.append(p)
+        p.start()
+
+    # Create and start the checkSubgrid processes
+    checkSubgrid_processes: list = []
+    for i in range(SIZE):
+        p = multiprocessing.Process(target=checkSubgrid, args=(testcase, i))
+        checkSubgrid_processes.append(p)
+        p.start()
+
+    # join all processes
+    for process in checkColumn_processes + checkRow_processes + checkSubgrid_processes:
+        process.join()
