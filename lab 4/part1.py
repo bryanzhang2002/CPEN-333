@@ -41,10 +41,11 @@ def mergingWorker() -> None:
     j: int = 0
     n: int = len(sortedFirstHalf)
 
+    
     while i < n and j < n:
-        if sortedFirstHalf[i] < sortedSecondHalf[j]:
+        if sortedFirstHalf[i] < sortedSecondHalf[j]:    # if an element is less than its corresponding element in the other half, append that one first
             SortedFullList.append(sortedFirstHalf[i])
-            i += 1
+            i += 1 
         else:
             SortedFullList.append(sortedSecondHalf[j])
             j += 1
