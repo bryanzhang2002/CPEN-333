@@ -51,7 +51,7 @@ def producer() -> None:
     for _ in range(SIZE * 2): #we just produce twice the buffer size for testing
         item = waitForItemToBeProduced()  #wait for an item to be produced
         print(f"DEBUG: {item} produced")
-        #complete the function below here to correctly store the item in the circular buffer
+
         empty.acquire() # wait for empty slot in buffer
         mutex.acquire() # entering critical section to insert item
         buffer.insert(item) 
@@ -68,14 +68,13 @@ def consumer() -> None:
         #to simulate consumption, item is thrown away here by just ignoring it
         
     for _ in range(SIZE * 2): #we just consume twice the buffer size for testing
-        #write the code below to correctly remove an item from the circular buffer
+
         full.acquire()  # wait for an item to enter buffer
         mutex.acquire()  # entering critical section to remove the item
         item = buffer.remove()
         mutex.release()  # leaving the critical section
         empty.release()  # indicate empty slot is avaliable
-        #end of your implementation for this function
-        #use the following code as is
+
         waitForItemToBeConsumed(item)  #wait for the item to be consumed
         print(f"DEBUG: {item} consumed")
 
