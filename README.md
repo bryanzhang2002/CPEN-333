@@ -1,1 +1,2 @@
-Software Design for Engineers II
+# Software Design for Engineers II
+- Contains labs and projects
