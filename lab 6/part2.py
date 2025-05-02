@@ -5,16 +5,15 @@ import multiprocessing
 import random #is used to cause some randomness 
 import time   #is used to cause some delay to simulate thinking or eating times
 
-def philosopher(id: int, chopstick: list, chopstickLocks: list): 
+def philosopher(id: int, chopstick: list): 
     """
-       implements a thinking-eating philosopher by using acquiring both chopsticks
+       implements a thinking-eating philosopher
        id is used to identifier philosopher #id (id is between 0 to numberOfPhilosophers-1)
-       chopstick is the list of semaphores associated with the chopsticks, chopStickLocks is a list of locks corresponding to each chopstick
+       chopstick is the list of semaphores associated with the chopsticks 
     """
     def eatForAWhile():   #simulates philosopher eating time with a random delay
         print(f"DEBUG: philosopher{id} eating")
         time.sleep(round(random.uniform(.1, .3), 2)) #a random delay (100 to 300 ms)
-
     
     def thinkForAWhile(): #simulates philosopher thinking time with a random delay
         print(f"DEBUG: philosopher{id} thinking")
@@ -23,29 +22,22 @@ def philosopher(id: int, chopstick: list, chopstickLocks: list):
     for _ in range(6): #to make testing easier, instead of a forever loop we use a finite loop
         leftChopstick = id
         rightChopstick = (id + 1) % 5      #5 is number of philosophers
+        #to simplify, try statement not used here
+        while True:
+            if chopstick[leftChopstick].acquire(False): #try to grab left
+                if chopstick[rightChopstick].acquire(False): #try to grab right
+                    print(f"DEBUG: philosopher{id} has chopstick{leftChopstick}")
+                    print(f"DEBUG: philosopher{id} has chopstick{rightChopstick}")
+                    break
+                else: 
+                    chopstick[leftChopstick].release() #release if unavailable
 
-        # acquire locks before checking chopsticks
-        with chopstickLocks[leftChopstick], chopstickLocks[rightChopstick]:
-            left_acquired = chopstick[leftChopstick].acquire(block=False)
-            right_acquired = chopstick[rightChopstick].acquire(block=False)
+        eatForAWhile()  #use this line as is
 
-            if left_acquired and right_acquired: # eat if both chopsticks acquired
-                #to simplify, try statement not used here
-                print(f"DEBUG: philosopher{id} has chopstick{leftChopstick}")
-                print(f"DEBUG: philosopher{id} has chopstick{rightChopstick}")
-
-                eatForAWhile()  #use this line as is
-
-                print(f"DEBUG: philosopher{id} is to release chopstick{rightChopstick}")
-                chopstick[rightChopstick].release()
-                print(f"DEBUG: philosopher{id} is to release chopstick{leftChopstick}")
-                chopstick[leftChopstick].release()
-            else:   # if unable to acquire both chopsticks, release any acquired chopsticks
-                if left_acquired:
-                    chopstick[leftChopstick].release()
-                if right_acquired:
-                    chopstick[rightChopstick].release()
-                
+        print(f"DEBUG: philosopher{id} is to release chopstick{rightChopstick}")
+        chopstick[rightChopstick].release()
+        print(f"DEBUG: philosopher{id} is to release chopstick{leftChopstick}")
+        chopstick[leftChopstick].release()
         thinkForAWhile()  #use this line as is
 
 if __name__ == "__main__":
@@ -55,13 +47,9 @@ if __name__ == "__main__":
     for i in range(numberOfPhilosophers):             
         semaphoreList.append(multiprocessing.Semaphore(1))    #one semaphore per chopstick
 
-    chopstickLocks = list() # create a mutex lock for each chopstick
-    for i in range(numberOfPhilosophers):
-        chopstickLocks.append(multiprocessing.Lock())
-
     philosopherProcessList = list()
     for i in range(numberOfPhilosophers): #instantiate all processes representing philosophers
-        philosopherProcessList.append(multiprocessing.Process(target=philosopher, args=(i, semaphoreList, chopstickLocks)))
+        philosopherProcessList.append(multiprocessing.Process(target=philosopher, args=(i, semaphoreList)))
     for j in range(numberOfPhilosophers): #start all child processes
         philosopherProcessList[j].start()
     for k in range(numberOfPhilosophers): #join all child processes

@@ -1,5 +1,5 @@
 #student name: Bryan zhang
-#student number:
+#student number: 69238335
 
 import multiprocessing
 import random
